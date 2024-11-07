@@ -30,6 +30,27 @@ if (isset($_FILES['cv']) && $_FILES['cv']['error'] === UPLOAD_ERR_OK) {
       $fileSize = $_FILES['cv']['size'];         // Taille du fichier en octets
       $fileType = $_FILES['cv']['type'];         // Type MIME du fichier
 }
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+      $nom = $_POST['nom'];
+      $email = $_POST['email'];
+      $telephone = $_POST['telephone'];
+      if(mb_strlen($telephone) <  10 || mb_strlen($telephone) > 10 )
+      $service = $_POST['service'];
+      $message = $_POST['message'];
+      $linkedin = !empty($_POST['linkedin']) ? $_POST['linkedin'] : null;
+      $portfolio = !empty($_POST['portfolio']) ? $_POST['portfolio'] : null;
+      $disponibilite = $_POST['disponibilite'];
+      if (isset($_FILES['cv']) && $_FILES['cv']['error'] === UPLOAD_ERR_OK) {
+
+            // Récupérer les informations du fichier
+            $fileTmpName = $_FILES['cv']['tmp_name'];  // Chemin temporaire du fichier sur le serveur
+            $fileName = $_FILES['cv']['name'];         // Nom original du fichier
+            $fileSize = $_FILES['cv']['size'];         // Taille du fichier en octets
+            $fileType = $_FILES['cv']['type'];         // Type MIME du fichier
+      }
+}
 ?>
 
 <!DOCTYPE html>
