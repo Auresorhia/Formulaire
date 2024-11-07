@@ -42,14 +42,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       $linkedin = !empty($_POST['linkedin']) ? $_POST['linkedin'] : null;
       $portfolio = !empty($_POST['portfolio']) ? $_POST['portfolio'] : null;
       $disponibilite = $_POST['disponibilite'];
-      if (isset($_FILES['cv']) && $_FILES['cv']['error'] === UPLOAD_ERR_OK) {
-
-            // Récupérer les informations du fichier
-            $fileTmpName = $_FILES['cv']['tmp_name'];  // Chemin temporaire du fichier sur le serveur
-            $fileName = $_FILES['cv']['name'];         // Nom original du fichier
-            $fileSize = $_FILES['cv']['size'];         // Taille du fichier en octets
-            $fileType = $_FILES['cv']['type'];         // Type MIME du fichier
+      
+$content = ""; 
+if(isset($_POST['inscription']) &&  $_POST['inscription'] == "Inscription"){
+    extract($_POST); 
+    //format de l'email :
+      
+      if(mb_strlen($prenom) < 1 || mb_strlen($prenom) > 30){
+            $content .= '<div class="alert alert-danger" role="alert">Le prenom doit contenir entre 1 et 30 caractères !</div>';
       }
+  
+      if(mb_strlen($nom) < 1 || mb_strlen($nom) > 30){
+            $content .= '<div class="alert alert-danger" role="alert">Le nom  de passe doit contenir entre 1 et 30 caractères !</div>';
+      }
+
+      $email =  filter_var($email, FILTER_VALIDATE_EMAIL);
+      if(!$email){
+          $content .= '<div class="alert alert-danger" role="alert">Email incorrect !</div>';
+      }
+      //verification telephone: 
+      if(mb_strlen($telephone) <  10 || mb_strlen($telephone) > 10 ){
+            $content .= '<div class="alert alert-danger" role="alert">Le numero doit contenir doit 10 caractères !</div>';
+      }
+}
+
 }
 
 $content = ""; 
@@ -83,7 +99,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {   // Vérification si le formulaire 
       $nom = $_POST['nom'];    // Récupération des données du formulaire
       
       //Préparation de l'email de confirmation pour le candidat :
-      /
+      
       $subjectCandidat = "Email de confirmation de votre inscription";  // Objet du mail / Sujet de l'email de confirmation pour le candidat
       $headersCandidat = "From: recrutement@votreentreprise.com";       // En-têtes, ici pour définir l'expéditeur.
       $messageCandidat = "Bonjour $nom,\n\nMerci de votre inscription. Nous avons bien reçu votre candidature pour le service '$service'.\nNous sommes ravis de vous compter parmi nous et nous vous contacterons bientôt pour la suite.\n\nCordialement,\nL'équipe Recrutement";  // Corps de l'email.
@@ -198,9 +214,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {   // Vérification si le formulaire 
 <body>
 
       <div class="container my-5">
-      <?= $content;
-            if (empty($content) && isset($_POST['inscription']) && $_POST['inscription'] == 'Inscription') : 
-      ?>
+      <?= $content; ?>
+      <?php if (empty($content) && isset($_POST['inscription']) && $_POST['inscription'] == 'Inscription') : ?>
+      <?php endif; ?>
             <h2 class="mb-4">Formulaire de Candidature</h2>
             <form action="<?= $_SERVER['PHP_SELF']; ?>" method="post">
 
